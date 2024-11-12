@@ -28,8 +28,13 @@ export default function Home() {
       await addUser(formData);
       alert("User added successfully!");
     } catch (err) {
-      console.error("Error adding user:", err);
-      alert("Failed to add user.");
+      console.error("Error adding user: ", err);
+      alert("Failed to add user: " + err);
+    } finally {
+      setFormData({firstname: "",
+        lastname: "",
+        email: "",
+        pwd: ""})
     }
   };
 
@@ -42,7 +47,7 @@ export default function Home() {
           value={formData.firstname}
           onChange={handleChange}
           placeholder="First Name"
-          className="border p-2 rounded text-black"
+          className="border p-2 rounded text-black required"
           required
         />
         <input
@@ -60,7 +65,7 @@ export default function Home() {
           value={formData.email}
           onChange={handleChange}
           placeholder="Email"
-          className="border p-2 rounded text-black"
+          className="border p-2 rounded text-black required"
           required
         />
         <input
@@ -69,7 +74,7 @@ export default function Home() {
           value={formData.pwd}
           onChange={handleChange}
           placeholder="Password"
-          className="border p-2 rounded text-black"
+          className="border p-2 rounded text-black required"
           required
         />
         <button
