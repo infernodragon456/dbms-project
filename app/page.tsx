@@ -9,6 +9,44 @@ interface IFormData {
   pwd: string;
 }
 
+interface IUserData {
+  uid : string | null
+  firstname: string | null;
+  lastname: string | null;
+  email: string | null;
+  pwd: string | null;
+}
+
+const SimpleTable = ({ data } : {data: Array<IUserData>}) => {
+  // Get headers from the first data item
+
+  return (
+    <div className="w-full overflow-x-auto">
+      <table className="min-w-full border-collapse border border-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="border border-gray-200 p-2 text-left text-black text-sm">User ID</th>
+            <th className="border border-gray-200 p-2 text-left  text-black text-sm">First Name</th>
+            <th className="border border-gray-200 p-2 text-left  text-black text-sm">Last Name</th>
+            <th className="border border-gray-200 p-2 text-left  text-black text-sm">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((user) => (
+            <tr key={user.uid}>
+              <td className="border border-gray-200 p-2 text-sm">{user.uid}</td>
+              <td className="border border-gray-200 p-2 text-sm">{user.firstname}</td>
+              <td className="border border-gray-200 p-2 text-sm">{user.lastname}</td>
+              <td className="border border-gray-200 p-2 text-sm">{user.email}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+
 export default function Home() {
   const [formData, setFormData] = useState<IFormData>({
     firstname: "",
@@ -18,6 +56,7 @@ export default function Home() {
   });
   const [selectedAttribute, setSelectedAttribute] = useState<string>("");
   const [attributeValue, setAttributeValue] = useState<string>("");
+  const [searchUsers, setSearchUsers] = useState<Array<IUserData>>([])
 
   const handleChange = (e : ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -52,16 +91,14 @@ export default function Home() {
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      await addUser(formData);
-      alert("User added successfully!");
+      const foundUsers = await findUser(selectedAttribute, attributeValue);
+      console.log(foundUsers)
+      setSearchUsers(foundUsers)
     } catch (err) {
-      console.error("Error adding user: ", err);
-      alert("Failed to add user: " + err);
+      console.error("Error finding user/s: ", err);
+      alert("Failed to find user/s: " + err);
     } finally {
-      setFormData({firstname: "",
-        lastname: "",
-        email: "",
-        pwd: ""})
+      setAttributeValue('')
     }
   }
 
@@ -111,7 +148,7 @@ export default function Home() {
           Add User
         </button>
       </form>
-      <form className="flex flex-col gap-4 mt-4">
+      <form onSubmit={handleSearchSubmit} className="flex flex-col gap-4 mt-4">
         <label htmlFor="attribute" className="font-medium">
             Select Attribute:
         </label>
@@ -141,6 +178,7 @@ export default function Home() {
           Search User
         </button>
       </form>
+      <SimpleTable data={searchUsers}/>
     </div>
   );
 }
