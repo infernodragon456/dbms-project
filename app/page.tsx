@@ -66,7 +66,7 @@ export default function Home() {
   }
 
   return (
-    <div className=" items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-row items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <form onSubmit={handleAddSubmit} className="flex flex-col gap-4">
         <input
           type="text"
@@ -111,7 +111,7 @@ export default function Home() {
           Add User
         </button>
       </form>
-      <form>
+      <form className="flex flex-col gap-4 mt-4">
         <label htmlFor="attribute" className="font-medium">
             Select Attribute:
         </label>
@@ -119,7 +119,7 @@ export default function Home() {
             id="attribute"
             value={selectedAttribute}
             onChange={handleAttributeChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
           >
             <option value="firstname">First Name</option>
             <option value="lastname">Last Name</option>
