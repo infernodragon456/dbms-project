@@ -42,3 +42,23 @@ export async function addUser({firstname, lastname, email, pwd} : IFormData) {
     prisma.$disconnect();
   }
 };
+
+export async function findUser({attribute, value} : {attribute : string, value: string}) {
+  try {
+    const existingUser = await prisma.users.findMany({
+      where: {
+        email: value
+      },
+    })
+
+    if (existingUser.length == 0){
+      throw new Error('No user found with this email!')
+    }
+
+  } catch (err) {
+    console.error("error executing query:", err);
+    throw err
+  } finally {
+    prisma.$disconnect()
+  }
+}
